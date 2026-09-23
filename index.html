@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 市场内容飞轮工作流 · 之槐 · 可伶可俐 CNC</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body {
+    font-family: 'PingFang SC','Roboto','Segoe UI',-apple-system,sans-serif;
+    background: linear-gradient(160deg, #F7E8D2 0%, #F3D9BE 45%, #F0C9B0 100%);
+    color: #2A2018;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+  body::before {
+    content:''; position: fixed; inset:0; z-index:-1;
+    background:
+      radial-gradient(circle at 20% 15%, rgba(255,180,160,0.45), transparent 45%),
+      radial-gradient(circle at 85% 70%, rgba(255,210,180,0.4), transparent 50%),
+      radial-gradient(circle at 50% 100%, rgba(240,180,150,0.3), transparent 55%);
+  }
+  section {
+    min-height: 100vh;
+    padding: 60px 24px;
+    max-width: 960px;
+    margin: 0 auto;
+    display: flex; flex-direction: column; justify-content: center;
+  }
+  .eyebrow {
+    font-size: 13px; letter-spacing: 3px; color: #8B6F47;
+    text-transform: uppercase; margin-bottom: 12px;
+  }
+  h1 {
+    font-size: clamp(48px, 9vw, 96px);
+    font-weight: 800; line-height: 1.05; letter-spacing: -2px;
+    color: #1F1610;
+  }
+  h2 {
+    font-size: clamp(32px, 5vw, 48px);
+    font-weight: 800; line-height: 1.1; letter-spacing: -1px;
+    margin-bottom: 8px; color: #1F1610;
+  }
+  .sub { font-size: 16px; color: #6B5844; margin-top: 16px; max-width: 640px; }
+  .card {
+    background: rgba(255,255,255,0.92);
+    border-radius: 24px;
+    padding: 28px;
+    box-shadow: 0 20px 50px rgba(120,80,40,0.12);
+    margin-top: 24px;
+  }
+  .card h3 { font-size: 22px; font-weight: 700; margin-bottom: 8px; color:#1F1610; }
+  .card .meta { font-size: 13px; color: #9B8468; margin-bottom: 14px; }
+  .card p, .card li { font-size: 15px; color: #3D2F22; }
+  .card ul { padding-left: 20px; }
+  .card li { margin-bottom: 6px; }
+  .grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(280px,1fr)); gap:18px; margin-top: 24px; }
+  .num-card {
+    background: #3A2E23; color: #F5E6D3;
+    border-radius: 20px; padding: 28px;
+    box-shadow: 0 16px 40px rgba(60,40,20,0.25);
+  }
+  .num-card .big {
+    font-size: 44px; font-weight: 800; color: #E8C9A0;
+    line-height: 1.1; letter-spacing: -1px;
+  }
+  .num-card .label { font-size: 14px; color: #D9C2A4; margin-top: 8px; }
+  .num-card .note { font-size: 12px; color: #B89F80; margin-top: 6px; }
+  .tag-row { display:flex; flex-wrap:wrap; gap:8px; margin-top:24px; }
+  .tag {
+    background: rgba(255,255,255,0.7); border:1px solid rgba(139,111,71,0.2);
+    padding: 8px 16px; border-radius: 999px; font-size:13px; color:#6B5844;
+  }
+  .step-num {
+    display:inline-block; width:36px; height:36px; line-height:36px; text-align:center;
+    background:#3A2E23; color:#E8C9A0; border-radius:50%; font-weight:700; margin-right:10px;
+  }
+  .callout {
+    background: rgba(255,255,255,0.6); border-left: 4px solid #C9A87C;
+    padding: 14px 18px; border-radius: 0 12px 12px 0; margin-top: 16px;
+    font-size: 14px; color:#4A3828;
+  }
+  code, .prompt {
+    background: #2A2018; color: #F5E6D3; padding: 12px 16px;
+    border-radius: 12px; font-size: 13px; line-height:1.6;
+    display:block; margin-top:12px; font-family: 'SF Mono',Consolas,monospace;
+  }
+  .flywheel {
+    display:flex; flex-wrap:wrap; gap:14px; margin-top:28px; justify-content:center;
+  }
+  .fw-item {
+    flex: 1 1 200px; background: rgba(255,255,255,0.9);
+    border-radius: 20px; padding: 20px; text-align:center;
+    box-shadow: 0 10px 30px rgba(120,80,40,0.1);
+  }
+  .fw-item .icon { font-size: 28px; }
+  .fw-item .t { font-weight:700; margin-top:8px; font-size:16px; color:#1F1610; }
+  .fw-item .d { font-size:12.5px; color:#6B5844; margin-top:6px; line-height:1.5; }
+  .chain {
+    display:flex; align-items:center; justify-content:center; gap:8px;
+    flex-wrap:wrap; margin-top:20px;
+  }
+  .chain .node {
+    background:#fff; padding:10px 16px; border-radius:12px;
+    font-size:13px; font-weight:600; color:#3A2E23;
+    box-shadow: 0 4px 12px rgba(120,80,40,0.08);
+  }
+  .chain .arrow { color:#C9A87C; font-weight:700; }
+  .chat { margin-top: 20px; }
+  .msg { max-width: 85%; padding: 12px 16px; border-radius: 18px; font-size: 14px; line-height:1.55; margin-bottom: 10px; }
+  .msg.user { background: #3A2E23; color: #F5E6D3; margin-left: auto; border-bottom-right-radius: 4px; }
+  .msg.ai { background: #fff; color: #2A2018; border-bottom-left-radius: 4px; box-shadow: 0 6px 18px rgba(120,80,40,0.08); }
+  .msg .who { font-size:11px; opacity:0.7; margin-bottom:4px; letter-spacing:1px; }
+  .deliverable {
+    background: #fff; border-radius: 18px; padding: 18px;
+    box-shadow: 0 8px 24px rgba(120,80,40,0.08);
+    display: flex; flex-direction: column; text-decoration: none; color: inherit;
+    transition: transform .15s ease;
+  }
+  .deliverable:hover { transform: translateY(-3px); }
+  .deliverable .tag-line { font-size:11px; color:#C9A87C; letter-spacing:1px; }
+  .deliverable .name { font-size:15px; font-weight:700; margin-top:6px; color:#1F1610; }
+  .deliverable .desc { font-size:12.5px; color:#6B5844; margin-top:6px; flex:1; line-height:1.55; }
+  .deliverable .go { font-size:12px; color:#8B6F47; margin-top:10px; }
+  .shot {
+    margin-top: 16px; border: 2px dashed #C9A87C; border-radius: 16px;
+    padding: 36px 20px; text-align: center; color: #8B6F47; font-size: 13px;
+    background: rgba(255,255,255,0.5);
+  }
+  .shot .big { font-size: 15px; font-weight:600; color:#6B5844; margin-bottom:6px; }
+  .footer {
+    text-align:center; padding: 40px 24px 80px; color:#8B6F47; font-size:13px;
+  }
+  .toc {
+    position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+    background: rgba(255,255,255,0.75); backdrop-filter: blur(10px);
+    padding: 8px 16px; border-radius: 999px; font-size:12px; color:#6B5844;
+    z-index: 100; display:flex; gap:14px;
+  }
+  .toc a { color:#6B5844; text-decoration:none; }
+  .toc a:hover { color:#3A2E23; }
+  @media (max-width: 600px) {
+    section { padding: 80px 20px; }
+    .toc { font-size:11px; gap:10px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="toc">
+  <a href="#hero">开场</a>
+  <a href="#pain">痛点</a>
+  <a href="#flywheel">飞轮</a>
+  <a href="#deliverables">产出</a>
+  <a href="#stack">底座</a>
+  <a href="#numbers">成果</a>
+  <a href="#playbook">上手</a>
+</div>
+
+<section id="hero">
+  <div class="eyebrow">11:11 · 水羊集团 · 大众护肤部 CNC</div>
+  <h1>AI内容<br>工作流</h1>
+  <p class="sub" style="font-size:20px;color:#4A3828;font-weight:500;margin-top:20px;">
+    AI 市场内容飞轮工作流 —— 我的可伶可俐日常，如何从"刷到就忘"跑到"每周自动转起来"
+  </p>
+  <div class="tag-row">
+    <span class="tag">✨ 灵谋 · 品牌灵感伙伴</span>
+    <span class="tag">🤖 豆包工作 · 操作浏览器 / 应用生成</span>
+    <span class="tag">👥 豆包工作伙伴 · 自建 Agent</span>
+    <span class="tag">📚 飞书双向打通</span>
+  </div>
+  <div style="margin-top:40px;font-size:13px;color:#9B8468;">
+    之槐 · 可伶可俐（Clean&amp;Clear）抖音达人挂链 / 种草投放 · 2026.09
+  </div>
+</section>
+
+<section id="pain">
+  <div class="eyebrow">Before / After</div>
+  <h2>以前我最大的浪费，<br>不是时间，是"灵感"</h2>
+  <p class="sub">每天刷抖音、小红书、评论区，看到觉得"这个方向可伶可俐可以做"的内容，当时记在脑子里，过两周就忘了。等季度做内容规划时，脑子里只剩一团雾。</p>
+
+  <div class="grid">
+    <div class="card" style="margin-top:20px;">
+      <h3>😵 Before</h3>
+      <div class="meta">过去的日常</div>
+      <ul>
+        <li>刷到好内容靠脑子记，靠截图堆相册</li>
+        <li>每周看爆款、写脚本、做周报，重复劳动占掉一半时间</li>
+        <li>方法只在我脑子里，同事接手要重新教一遍</li>
+        <li>数据看板每周手工拉、对口径、拼透视，周周不一致</li>
+      </ul>
+    </div>
+    <div class="card" style="margin-top:20px;">
+      <h3>🌿 After</h3>
+      <div class="meta">现在的日常</div>
+      <ul>
+        <li>看到任何灵感随手甩给专属 Agent"灵谋"，它按 4 维框架分析并自动沉淀成飞书文档</li>
+        <li>爆款链接丢给 Skill，30 秒出可伶可俐版本的种草笔记 / 挂链脚本</li>
+        <li>方法写成 Skill，同事导入即用，经验变成团队资产</li>
+        <li>每周投喂一次原始数据，看板自动长出来，口径永不漂移</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section id="flywheel">
+  <div class="eyebrow">The Flywheel</div>
+  <h2>内容飞轮 · 六个环节</h2>
+  <p class="sub">不是"和 AI 聊天"，而是把市场岗每周重复的动作流程化。第一遍教它，之后一句话触发。第 ⑥ 步复盘会回流给 ①②③，越转越快。</p>
+
+  <div class="flywheel">
+    <div class="fw-item">
+      <div class="icon">📥</div>
+      <div class="t">① 灵感随录</div>
+      <div class="d">灵谋 Agent：看到爆款 / 用户原声直接甩过去，4 维分析 + 自动写进灵感库</div>
+    </div>
+    <div class="fw-item">
+      <div class="icon">⏰</div>
+      <div class="t">② 自动抓爆款</div>
+      <div class="d">定时任务：每周自动扫小红书七日爆款 / 低粉爆款，推送选题方向</div>
+    </div>
+    <div class="fw-item">
+      <div class="icon">✍️</div>
+      <div class="t">③ 爆款改写</div>
+      <div class="d">小红书 / 抖音链接直接给，四维拆解后按 80% 结构 + 90% 文案差异化改写</div>
+    </div>
+    <div class="fw-item">
+      <div class="icon">📋</div>
+      <div class="t">④ 内容 BF</div>
+      <div class="d">读历史 BF 当上下文，一次产出人群金字塔 + 内容方向脚本，直接落飞书</div>
+    </div>
+    <div class="fw-item">
+      <div class="icon">📊</div>
+      <div class="t">⑤ 数据看板</div>
+      <div class="d">乘方 + 千川数据投喂，素材/达人双口径周更自动看板，上周会</div>
+    </div>
+    <div class="fw-item">
+      <div class="icon">🔄</div>
+      <div class="t">⑥ 内容复盘</div>
+      <div class="d">跑出来的结论、被否的方案写回 Skill，反哺下一轮灵感和改写规则</div>
+    </div>
+  </div>
+
+  <div class="callout">
+    <strong>飞轮的关键不是某个环节强，而是第 ⑥ 步会回流。</strong>
+    每周哪些脚本跑出来了、哪些被达人否了、哪些选题数据差，都写回 Skill——下一次它就知道什么是"可伶可俐该做的内容"。这是和"用一次性 AI 对话"最本质的区别。
+  </div>
+</section>
+
+<section>
+  <div class="eyebrow">Stage 01 · 灵感随录</div>
+  <h2>灵谋：我的品牌灵感伙伴</h2>
+  <p class="sub">一个我自己训练的 Agent。先喂给它可伶可俐的品牌信息、产品信息、挂链机制、内容底线，之后任何市场素材甩给它，它都按同一个框架分析，并写进同一份飞书文档。</p>
+
+  <div class="card">
+    <h3>它是谁</h3>
+    <div class="meta">灵谋 · 水羊集团可伶可俐品牌的市场灵感伙伴 / 品牌战略沉淀数字分身</div>
+    <ul>
+      <li><strong>风格</strong>：先想后说，端着不讲的不讲；该讲观点讲观点，该讲数据讲数据。</li>
+      <li><strong>签名</strong>：读完素材再说话——或者闭嘴。</li>
+      <li><strong>4 维分析框架</strong>：内容上怎么做 / 人群是谁 / 品牌怎么借势 / 投放怎么打。</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>真实对话还原：一条随手视频 → 一个市场方向</h3>
+    <div class="meta">素材：抖音"上班摸鱼精致 5 件套"视频（漱口油、美甲笔、UV 梳、冷泡茶、黑芝麻丸）</div>
+    <div class="chat">
+      <div class="msg user">
+        <div class="who">我</div>
+        （直接把这条抖音视频链接甩给灵谋）
+      </div>
+      <div class="msg ai">
+        <div class="who">灵谋</div>
+        看完第一反应：这 5 件里没有"控油 / 脸部"那一件——这是个空白位。
+      </div>
+      <div class="msg ai">
+        <div class="who">灵谋 · 4 维分析</div>
+        📌 内容上：「工位摸鱼精致 5 件套」是天然产品容器，吸油纸可作为"控油那一件"植入<br>
+        👥 人群上：20–28 岁精致打工人，工位偷偷精致，3–5 分钟搞定<br>
+        🏷️ 品牌上：主动找"工位好物"类博主做合集植入，推"控油 5 件套"礼盒<br>
+        📣 投放上：抖音为主，5–10 位腰部 KOL × 合集视频，直接对标这条内容形态
+      </div>
+      <div class="msg ai">
+        <div class="who">灵谋 · 已自动沉淀</div>
+        已写入《可伶可俐灵感库 2026Q3》📝
+      </div>
+    </div>
+    <div style="margin-top:16px; border-radius:16px; overflow:hidden; box-shadow:0 10px 30px rgba(60,40,20,0.18);">
+      <img src="https://aka.doubaocdn.com/s/VV59yKauIq" alt="灵谋真实对话：发抖音链接 → 自动分析并写入灵感库v1.1" style="width:100%; display:block;">
+    </div>
+    <div style="font-size:12px;color:#9B8468;margin-top:8px;text-align:center;">↑ 真实截图：我随手甩一条抖音链接给灵谋，它自动完成素材 7 的洞察并写入《可伶可俐灵感库 2026Q3 v1.1》</div>
+    <div style="margin-top:14px;">
+      <a class="deliverable" style="display:block;" href="https://syounggroup.feishu.cn/docx/Y1zidk0YbosBwkxMIU6cxMWLnXf" target="_blank">
+        <div class="tag-line">沉淀资产 · 飞书文档</div>
+        <div class="name">可伶可俐灵感库 2026Q3 ↗</div>
+        <div class="desc">灵谋每次分析自动累积的品牌灵感库，目前已沉淀 7 条素材 + 双轨赛道洞察 + 产品矩阵建议，做季度内容规划时直接翻。</div>
+      </a>
+    </div>
+  </div>
+
+  <div class="callout">
+    <strong>怎么做出来的：</strong>在豆包工作伙伴里用自然对话把灵谋的人设、分析框架、沉淀文档链接告诉它，它就变成你的专属 Agent。不需要写代码，跑通一次就长期生效。
+  </div>
+</section>
+
+<section>
+  <div class="eyebrow">Stage 02 · 自动化任务</div>
+  <h2>不用我刷，爆款自己来找我</h2>
+  <p class="sub">灵感随录解决"我看到的"，自动化任务解决"我没看到的"。每周定时让 AI 去扫，把结果直接推到我飞书。</p>
+
+  <div class="grid">
+    <div class="card">
+      <h3>⏰ 每周爆款扫描</h3>
+      <div class="meta">定时任务 · 到点自动跑</div>
+      <ul>
+        <li>小红书七日爆款笔记：近 7 天各垂类 TOP50 + 爆款共性</li>
+        <li>小红书低粉爆款：粉丝 &lt;5000 但互动 &gt;500 的素人信号</li>
+        <li>豆包工作 / 操作浏览器：抓抖音某品某月高赞帖，标题 / 链接 / 点赞收藏自动入表</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>📨 主动推送，不用惦记</h3>
+      <div class="meta">豆包工作伙伴 · 主动智能服务</div>
+      <ul>
+        <li>每周一早上把上周爆款扫描结果推到飞书对话</li>
+        <li>有关键群 / 关键人消息，主动提醒并起草回复</li>
+        <li>每周四下午自动根据本周工作内容整理周报初稿发我过目</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="prompt">
+    示例指令："每周一早上 9 点，帮我扫一下上周小红书护肤个护垂类的爆款笔记和低粉爆款，按内容方向归类，挑出 3 个可伶可俐吸油纸可以参考的选题，整理成一份飞书文档发给我。"
+  </div>
+</section>
+
+<section>
+  <div class="eyebrow">Stage 03 · 爆款改写 Skill</div>
+  <h2>链接丢进去，脚本出来</h2>
+  <p class="sub">把"我怎么写可伶可俐"这件事写成 Skill，AI 读到就按我的标准执行。这是整个飞轮里复用率最高的部分。</p>
+
+  <div class="card">
+    <h3>三个核心 Skill</h3>
+    <div class="meta">都是我自己反复迭代出来的，不是一次写完的</div>
+    <ul>
+      <li><strong>小红书文案仿写</strong>：丢一篇爆款笔记链接 → 出可伶可俐种草笔记（标题 / 正文 / tag）。锁死 3M 过油膜、奶瓶级 PP 等卖点；相似度 ≤70%；素人感、拒营销腔；支持按人群出 5 个差异化角度。</li>
+      <li><strong>CNC 内容脚本策划</strong>：面向达人 brief 场景，按"好物分享 / 精致上班 vlog / 参考片改写"选范式，输出逐字口播稿 + 画面要求 + 达人选择标准。</li>
+      <li><strong>抖音爆款视频改写</strong>：输入美妆爆款挂链视频链接 → 四维拆解（口播 / 画面 / 情绪曲线 / 挂链策略）→ 按 <strong>80% 结构对齐 + 90% 文案差异化</strong> 仿写，保留钩子，每句话重写。</li>
+    </ul>
+  </div>
+
+  <div class="callout">
+    <strong>方法论：</strong>不是一次写完，是"拿真实案例试跑 → 发现问题改规则 → 删冗余 → 锁约束"反复 3-5 轮。尤其要把<strong>被否掉的方案也写进去</strong>（比如某条口播范式为什么不行），下次才不会重蹈覆辙。
+  </div>
+</section>
+
+<section>
+  <div class="eyebrow">Stage 04 · 内容 BF 生成</div>
+  <h2>不用重新交代背景，<br>它读过我所有的历史 BF</h2>
+  <p class="sub">这是豆包工作和飞书打通后最爽的一点——普通 AI 每次都要你重新讲产品机制，豆包工作直接读你飞书里的历史 BF、周会纪要、人群规划。</p>
+
+  <div class="card">
+    <h3>一次产出完整达人合作 BF</h3>
+    <div class="meta">对话式生成，落到飞书文档</div>
+    <ul>
+      <li>第 1 页：合作须知与核心机制（产品、卖点、挂链机制、投放要求、内容底线）</li>
+      <li>第 2 页：金字塔人群模型（精致控油党 / 强社交 / 精致男士 / 彩妆爱好者 / 约会人群 / 素颜懒人）</li>
+      <li>第 3 页：可视化呈现要求（爆点画面、拍摄 TIPS）</li>
+      <li>第 4 页起：每条内容方向的开头切入点、必提卖点、内容结构</li>
+    </ul>
+  </div>
+
+  <div class="prompt">
+    示例指令："读一下我飞书里 Q3 达人合作 BF 和最近 3 周的周会记录，按上次的结构和语气，帮我起草 Q4 第一批 15 位达人的合作 BF 初稿，写完直接落成一篇飞书文档。"
+  </div>
+
+  <div class="callout">
+    <strong>注意</strong>：AI 产出是初稿，不是终稿。品牌底线、合规词、过油膜可视化画面这些硬规则由我本人最后把关，这也是公司红线——AI 产出人工审后再对外。
+  </div>
+</section>
+
+<section>
+  <div class="eyebrow">Stage 05 · 数据看板</div>
+  <h2>每周投喂一次，看板自动长出来</h2>
+  <p class="sub">负责乘方、千川（全域）两个平台的达人挂链数据。以前每周拉数、对口径、拼透视 1-2 小时；现在口径规则一次说清，之后每周扔数据文件就行。</p>
+
+  <div class="grid">
+    <div class="num-card">
+      <div class="big">1-2h</div>
+      <div class="label">以前每周手工做看板</div>
+      <div class="note">拉两平台数据 / Excel 对口径 / 拼透视</div>
+    </div>
+    <div class="num-card">
+      <div class="big">一句话</div>
+      <div class="label">现在每周投喂数据</div>
+      <div class="note">自动清洗 / 对齐周三-周二周期 / 出新版</div>
+    </div>
+    <div class="num-card">
+      <div class="big">双口径</div>
+      <div class="label">素材维度 / 达人维度</div>
+      <div class="note">不可重复计算，写死在规则里</div>
+    </div>
+  </div>
+
+  <div class="grid" style="margin-top:20px;">
+    <a class="deliverable" href="https://syounggroup.aiforce.cloud/app/app_17dnakq5je7" target="_blank">
+      <div class="tag-line">工作台 · 应用生成</div>
+      <div class="name">可伶可俐千川项目工作台 ↗</div>
+      <div class="desc">今日 ROI / 消耗 / 转化、今日任务清单、最新热点、选题建议一屏聚合，by 天盯盘直接用。</div>
+    </a>
+    <a class="deliverable" href="https://syounggroup.aiforce.cloud/app/app_17dqg540ak9" target="_blank">
+      <div class="tag-line">用户之声看板</div>
+      <div class="name">面部吸油纸 · 用户之声看板 ↗</div>
+      <div class="desc">39 条来自小红书 / 京东 / 抖音 / 微博的真实用户声音，认可率、担忧点、单条篇幅一屏看清，指导交互和标题优化。</div>
+    </a>
+  </div>
+
+  <div class="callout">
+    <strong>踩坑提醒：</strong>数据看板最容易翻车的不是工具，是口径。第一遍搭就把"哪个维度算什么、什么不能重复算"跟 AI 说清楚并固化，比任何美化都重要。
+  </div>
+</section>
+
+<section>
+  <div class="eyebrow">Stage 06 · 内容复盘 · 飞轮回流</div>
+  <h2>每周的结论，写回 Skill</h2>
+  <p class="sub">这是把一次性对话变成长期资产的关键一步。跑出来的数据结论、被达人否掉的脚本方向、新验证的爆款公式，全部回流。</p>
+
+  <div class="chain">
+    <span class="node">本周数据跑出来</span>
+    <span class="arrow">→</span>
+    <span class="node">哪些素材有效 / 哪些被否</span>
+    <span class="arrow">→</span>
+    <span class="node">结论写进 Skill 规则</span>
+    <span class="arrow">→</span>
+    <span class="node">下周灵感和改写自动更准</span>
+  </div>
+
+  <div class="card">
+    <h3>我已经验证过的数字</h3>
+    <div class="meta">CNC 团队 · 2026 H1</div>
+    <ul>
+      <li>AI 辅助达人定制脚本：<strong>脚本供给效率 +60%</strong>，口播达人动销率 <strong>+20%</strong></li>
+      <li>爆款拆解 → 差异化复刻链路：<strong>内容创意工作效率 +50%</strong>（Q1 实测，已团队分享）</li>
+      <li>小红书种草笔记成稿：<strong>半小时以上 → 30 秒</strong></li>
+      <li>周更数据看板：<strong>每周 1-2 小时 → 一句话投喂</strong></li>
+    </ul>
+  </div>
+</section>
+
+<section id="deliverables">
+  <div class="eyebrow">Real Deliverables</div>
+  <h2>不是 PPT，<br>是这些真跑出来的东西</h2>
+  <p class="sub">下面每一张卡片都是我在飞书里真实产出、仍在持续更新的文档 / 应用，点击直接打开。</p>
+
+  <div class="grid">
+    <a class="deliverable" href="https://syounggroup.feishu.cn/docx/Y1zidk0YbosBwkxMIU6cxMWLnXf" target="_blank">
+      <div class="tag-line">灵感资产 · 灵谋自动沉淀</div>
+      <div class="name">可伶可俐灵感库 2026Q3 ↗</div>
+      <div class="desc">灵谋每次分析自动写入的品牌灵感库，7 条素材 + 双轨赛道洞察 + 产品矩阵建议。</div>
+    </a>
+    <a class="deliverable" href="https://feishu.doubao.com/docx/VxxBd0KstoXjKexnEmWcxrWfnWh" target="_blank">
+      <div class="tag-line">竞品拆解 · 豆包操作浏览器</div>
+      <div class="name">可伶可俐抖音高赞视频选题分析 ↗</div>
+      <div class="desc">8 月高赞帖按极端测试 / 方法分享 / 反转剧情三档拆解，直接指导内容方向迭代。</div>
+    </a>
+    <a class="deliverable" href="https://bytedance.feishu.cn/wiki/MkDJwgVmBiX5nbkbl7pcIpmDnPg" target="_blank">
+      <div class="tag-line">方法论沉淀 · AI 草稿本</div>
+      <div class="name">之槐的 AI 草稿本（BF 写法）↗</div>
+      <div class="desc">Gemini + NotebookLM 写达人合作 BF 的完整模板：6 层人群金字塔 + 可视化要求 + 多方向脚本框架。</div>
+    </a>
+    <a class="deliverable" href="https://syounggroup.feishu.cn/docx/WATndPUQEoNS6CxfRmGcAohHnug" target="_blank">
+      <div class="tag-line">完整案例 · 可对外讲</div>
+      <div class="name">WorkBuddy 在美妆营销工作中的落地 ↗</div>
+      <div class="desc">Skill 搭建 / 连接飞书 / 市场下载 / 数据看板四个维度的完整复盘，同事照着做一周见效。</div>
+    </a>
+    <a class="deliverable" href="https://syounggroup.feishu.cn/wiki/Kk4gwiHuhiI4DOkvP3Acj9WhnWA" target="_blank">
+      <div class="tag-line">Q1 团队分享 · 已过审</div>
+      <div class="name">AI 赋能抖音 KOC 挂链爆款拆解 &amp; 复刻 ↗</div>
+      <div class="desc">社媒助手抓达人信息 + Gemini 拆爆款框架的完整链路，内容创意效率 +50% 的实测过程。</div>
+    </a>
+    <a class="deliverable" href="https://syounggroup.feishu.cn/docx/SbuedCqvFotpZdxzU1UcHGpUnIf" target="_blank">
+      <div class="tag-line">灵谋自述 · Agent 说明书</div>
+      <div class="name">灵谋 AI 案例：可伶可俐品牌灵感伙伴 ↗</div>
+      <div class="desc">灵谋的人设、4 维框架、真实案例和日常使用方式，想照着建自己 Agent 的直接抄。</div>
+    </a>
+  </div>
+
+  <div style="margin-top:24px; border-radius:16px; overflow:hidden; box-shadow:0 10px 30px rgba(60,40,20,0.15);">
+    <img src="https://aka.doubaocdn.com/s/UdmPqTrjXU" alt="可伶可俐抖音达人挂链周报看板实际效果" style="width:100%; display:block;">
+  </div>
+  <div style="font-size:12px;color:#9B8468;margin-top:8px;text-align:center;">↑ 真实截图：每周自动长出来的《可伶可俐·抖音达人挂链周报看板》——8 周累计追踪，素材/达人双口径自动对齐，KPI、周度趋势、ROI 变化一屏看清</div>
+</section>
+
+<section id="stack">
+  <div class="eyebrow">Tool Stack</div>
+  <h2>这套飞轮背后，<br>其实是三个东西</h2>
+
+  <div class="grid">
+    <div class="card">
+      <h3>🛠 豆包工作（独立 APP）</h3>
+      <div class="meta">干活的主力</div>
+      <ul>
+        <li><strong>/操作浏览器</strong>：自己打开网页、抓数据、截图、下载资料</li>
+        <li><strong>/应用生成</strong>：搭个人工作台（千川数据看板、灵感看板）</li>
+        <li><strong>读飞书文档 / 多维表格</strong>：甩链接就读，不用复制粘贴</li>
+        <li><strong>写回飞书</strong>：生成内容直接落成飞书文档，或在原文档里补充</li>
+        <li><strong>Go 模式 / Plan 模式</strong>：跑任务用 Go，做方案用 Plan 让它反问我</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>👥 豆包工作伙伴</h3>
+      <div class="meta">飞书里的专属 AI 同事</div>
+      <ul>
+        <li>像真同事一样住在飞书联系人里，对话、日程、文档都在它服务范围</li>
+        <li><strong>自然对话建 Agent</strong>：告诉它人设、职责、知识库，它就变成"灵谋"</li>
+        <li><strong>定时任务 / 主动监听</strong>：每周自动跑爆款扫描、每天早上推未读摘要</li>
+        <li><strong>工作记忆</strong>：越用越懂我的品牌口径和写作风格</li>
+        <li>权限和我本人一致，企业数据不用于模型训练</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>📚 飞书双向打通</h3>
+      <div class="meta">不复制粘贴，是真打通</div>
+      <ul>
+        <li>读：历史 BF / 周会 Wiki / 群聊记录 / 妙记 / 多维表格</li>
+        <li>写：高亮块排版直接写进飞书文档，同事在线批注</li>
+        <li>发：一键转发到指定飞书群，不用我再搬运</li>
+        <li>安全：数据不出飞书，敏感操作需要我确认</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section id="numbers">
+  <div class="eyebrow">The Numbers</div>
+  <h2>写在最后，是这些数字</h2>
+  <div class="grid">
+    <div class="num-card">
+      <div class="big">10+</div>
+      <div class="label">自建 + 市场安装 Skill</div>
+      <div class="note">可分享给同事直接导入</div>
+    </div>
+    <div class="num-card">
+      <div class="big">30s</div>
+      <div class="label">小红书种草笔记成稿</div>
+      <div class="note">从半小时以上压缩到半分钟</div>
+    </div>
+    <div class="num-card">
+      <div class="big">+50%</div>
+      <div class="label">内容创意工作效率</div>
+      <div class="note">Q1 实测 · 已团队分享</div>
+    </div>
+    <div class="num-card">
+      <div class="big">+60%</div>
+      <div class="label">达人定制脚本供给</div>
+      <div class="note">口播达人动销率 +20%</div>
+    </div>
+    <div class="num-card">
+      <div class="big">1-2h → 1 句</div>
+      <div class="label">周更数据看板</div>
+      <div class="note">口径一次锁死，周周一致</div>
+    </div>
+    <div class="num-card">
+      <div class="big">0</div>
+      <div class="label">行代码</div>
+      <div class="note">全部对话式搭建</div>
+    </div>
+  </div>
+</section>
+
+<section id="playbook">
+  <div class="eyebrow">How to Start</div>
+  <h2>如果你也想跑起来，<br>这一周就够了</h2>
+  <div class="card">
+    <h3>六步上手路径</h3>
+    <div style="margin-top:12px;">
+      <p style="margin-bottom:10px;"><span class="step-num">1</span>先装后建：把市场里现成的 Skill（文档处理、数据下载）装上，当天就省事</p>
+      <p style="margin-bottom:10px;"><span class="step-num">2</span>挑一件每周重复、有明确输出格式的事做第一个 Skill（周报 / 种草文案），别一上来搞复杂的</p>
+      <p style="margin-bottom:10px;"><span class="step-num">3</span>用真实案例迭代 3-5 轮，把"什么不行"也写进去</p>
+      <p style="margin-bottom:10px;"><span class="step-num">4</span>在豆包工作伙伴里用自然对话建你的专属 Agent（像灵谋那样）</p>
+      <p style="margin-bottom:10px;"><span class="step-num">5</span>接上飞书：从"复制粘贴给 AI"变成"甩链接给 AI"</p>
+      <p><span class="step-num">6</span>数据类工作先锁口径，再谈自动化；每周把结论写回 Skill</p>
+    </div>
+  </div>
+
+  <div class="callout" style="margin-top:24px;">
+    <strong>一句话总结：</strong>豆包工作在这套工作里的角色，不是"更聪明的聊天框"，而是<strong>一个可以训练、可以沉淀、可以分享的数字工作搭子</strong>——你教它一遍，它替你做一周，你的方法还能原样交给下一个同事。
+  </div>
+</section>
+
+<div class="footer">
+  之槐 · 可伶可俐 CNC · AI 市场内容飞轮工作流分享 · 2026.09<br>
+  水羊集团大众护肤部 · 内部交流材料
+</div>
+
+</body>
+</html>
